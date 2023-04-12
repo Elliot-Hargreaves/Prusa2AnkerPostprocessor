@@ -72,6 +72,7 @@ pub const METADATA_PROPERTIES: &[MetadataProperty] = &[
 /// should be defined more than once
 #[test]
 fn assert_no_duplicate_metadata_properties() {
+    // Test each property defined in `METADATA_PROPERTIES`
     METADATA_PROPERTIES.iter().for_each(|property| {
         let anker_field_name = match property {
             MetadataProperty::Constant { name, value: _ } => name.clone(),
@@ -81,10 +82,14 @@ fn assert_no_duplicate_metadata_properties() {
                 translate_fn: _,
             } => anker.clone(),
         };
+        // Assert that we've only defined an output for each AnkerMake field once
         assert_eq!(
             1,
+            // Iterate over our `METADATA_PROPERTIES` slice again
             METADATA_PROPERTIES
                 .iter()
+                // Find out any elements of the slice that don't match on the AnkerMake field
+                // name
                 .filter(|other| match other {
                     MetadataProperty::Constant { name, value: _ } => anker_field_name == *name,
                     MetadataProperty::Field {
